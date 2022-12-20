@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static javax.persistence.CascadeType.*;
+
 /**
  * author: Ulansky
  */
@@ -30,7 +32,7 @@ public class User implements UserDetails{
     private String password;
     private String firstName;
 
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, cascade = {MERGE,DETACH,REFRESH,PERSIST},fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "users_id")},
             inverseJoinColumns = {@JoinColumn(name = "roles_id")})

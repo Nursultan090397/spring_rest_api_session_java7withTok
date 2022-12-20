@@ -22,6 +22,7 @@ public class Role {
     private Long id;
     private String roleName;
 
-    @ManyToMany(targetEntity = User.class,mappedBy = "roles", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @ManyToMany(targetEntity = User.class,mappedBy = "roles", cascade =
+            {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST})
     private List<User> users;
 }

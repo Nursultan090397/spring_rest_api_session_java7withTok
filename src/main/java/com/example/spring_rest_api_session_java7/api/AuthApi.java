@@ -12,16 +12,15 @@ import com.example.spring_rest_api_session_java7.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * author: Ulansky
- */
+import java.io.IOException;
+import java.util.List;
+
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/jwt/")
@@ -52,7 +51,40 @@ public class AuthApi {
     }
 
     @PostMapping("registration")
+    //@PreAuthorize("hasAuthority('Admin')")
     public RegisterResponse create(@RequestBody RegisterRequest request) {
         return userService.create(request);
     }
+    @GetMapping("/getAllUser")
+    @PreAuthorize("isAuthenticated()")
+    public List<RegisterResponse> getAllUser() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/getUserById/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public RegisterResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PutMapping("/updateUser/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public RegisterResponse updateUser(@PathVariable Long id, @RequestBody RegisterRequest registerRequest) {
+        return userService.updateUser(id, registerRequest);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public RegisterResponse deleteUser(@PathVariable Long id) throws IOException {
+        return userService.deleteUser(id);
+    }
+
+    @PostMapping("/changeRole/{roleId}/{userId}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public RegisterResponse changeRole(@PathVariable("roleId") Long roleId,
+                                       @PathVariable("userId") Long userId) throws IOException {
+        return userService.changeRole(roleId, userId);
+    }
+
 }
+
