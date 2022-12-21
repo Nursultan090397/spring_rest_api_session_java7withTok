@@ -51,10 +51,11 @@ public class AuthApi {
     }
 
     @PostMapping("registration")
-    //@PreAuthorize("hasAuthority('Admin')")
+
     public RegisterResponse create(@RequestBody RegisterRequest request) {
         return userService.create(request);
     }
+
     @GetMapping("/getAllUser")
     @PreAuthorize("isAuthenticated()")
     public List<RegisterResponse> getAllUser() {

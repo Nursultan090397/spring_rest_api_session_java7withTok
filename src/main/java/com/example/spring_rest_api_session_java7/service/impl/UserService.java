@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    @PostConstruct
+    /*@PostConstruct
     public void initMethod(){
         Role role1 = new Role();
         role1.setRoleName("Admin");
@@ -91,8 +91,42 @@ public class UserService implements UserDetailsService {
         userRepository.save(user2);
         roleRepository.save(role1);
         roleRepository.save(role2);
-        roleRepository.save(role3);
+        roleRepository.save(role3);*/
+    @PostConstruct
+    public void initMethod() {
+        userRepository.findByEmail(admin().getEmail())
+                .ifPresent(userRepository::delete);
+        userRepository.save(admin());
+
+        userRepository.findByEmail(instructor().getEmail())
+                .ifPresent(userRepository::delete);
+        userRepository.save(instructor());
     }
+
+    public User admin() {
+        Role role = new Role();
+        role.setRoleName("Admin");
+        User user = new User();
+        user.setEmail("esen@gmail.com");
+        user.setPassword("esen");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFirstName("Esen");
+        user.addRole(role);
+        return user;
+    }
+
+    public User instructor() {
+        Role role = new Role();
+        role.setRoleName("Instructor");
+        User user = new User();
+        user.setEmail("allanov@gmail.com");
+        user.setPassword("allanov");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFirstName("Muchammed");
+        user.addRole(role);
+        return user;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
